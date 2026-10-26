@@ -2,15 +2,14 @@
 <html lang="ru">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <!-- Важно: maximum-scale=1.0, user-scalable=no убирает зум в телефоне -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>Barber Mini App</title>
-    <!-- Подключаем скрипт Telegram -->
+    <!-- Скрипт Telegram (через надежный CDN) -->
     <script src="https://cdn.jsdelivr.net/npm/telegram-web-app@latest/dist/telegram-web-app.js"></script>
   </head>
-  <body>
+  <body className="bg-black">
     <div id="root"></div>
+    <!-- Точка входа Vite -->
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>
