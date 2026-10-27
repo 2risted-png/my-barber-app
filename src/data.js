@@ -1,14 +1,26 @@
+// ВАШ TELEGRAM ID (узнать можно у бота @userinfobot)
+export const ADMIN_ID = 123456789; // ЗАМЕНИТЕ НА СВОЙ ID!
+
 export const mockUser = {
   name: 'Александр',
   balance: 2450,
-  purchasedCourseIds: [1], // ID курсов, которые уже куплены
+  purchasedCourseIds: [1], 
+};
+
+// Данные для админ-панели (в будущем будут приходить с сервера)
+export const mockAdminStats = {
+  totalUsers: 1250,
+  totalRevenue: 450000,
+  recentSales: [
+    { id: 1, user: 'Иван (@ivan_barber)', course: 'Базовый курс', price: 14900, date: '2 мин назад' },
+    { id: 2, user: 'Дмитрий (@dimas)', course: 'Удлиненные дизайны', price: 19900, date: '15 мин назад' },
+    { id: 3, user: 'Егор (@egor_cut)', course: 'Контент для мастера', price: 9900, date: '1 час назад' },
+  ]
 };
 
 export const mockStats = {
   lessons: '180+',
   students: '2500+',
-  experience: '11 лет',
-  masterClasses: '600+',
 };
 
 export const mockCourses = [
@@ -66,22 +78,7 @@ export const mockCourses = [
 ];
 
 export const mockReviews = [
-  {
-    id: 1,
-    name: 'Михаил',
-    text: 'Завидовал инста-стрижкам. Теперь делаю сам и не боюсь сложных форм!',
-    avatar: 'https://i.pravatar.cc/150?img=11',
-  },
-  {
-    id: 2,
-    name: 'Артем',
-    text: 'Жил от зарплаты до зарплаты. После курса поднял цены в два раза.',
-    avatar: 'https://i.pravatar.cc/150?img=12',
-  },
-  {
-    id: 3,
-    name: 'Иван',
-    text: 'Страх от того, что не видел перспектив. Сейчас строю личный бренд.',
-    avatar: 'https://i.pravatar.cc/150?img=13',
-  },
+  { id: 1, name: 'Михаил', text: 'Завидовал инста-стрижкам. Теперь делаю сам и не боюсь сложных форм!', avatar: 'https://i.pravatar.cc/150?img=11' },
+  { id: 2, name: 'Артем', text: 'Жил от зарплаты до зарплаты. После курса поднял цены в два раза.', avatar: 'https://i.pravatar.cc/150?img=12' },
+  { id: 3, name: 'Иван', text: 'Страх от того, что не видел перспектив. Сейчас строю личный бренд.', avatar: 'https://i.pravatar.cc/150?img=13' },
 ];
