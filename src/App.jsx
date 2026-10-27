@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
-import { mockUser } from './data';
-import { HomeIcon, UserIcon, CartIcon, SupportIcon } from './icons';
-import { HomeScreen, CatalogScreen, CourseScreen, CheckoutScreen, ProfileScreen } from './screens';
+import { mockUser, ADMIN_ID } from './data';
+import { HomeIcon, UserIcon, CartIcon, SupportIcon, AdminIcon } from './icons';
+import { HomeScreen, CatalogScreen, CourseScreen, CheckoutScreen, ProfileScreen, AdminScreen } from './screens';
 
 export default function App() {
   const [screen, setScreen] = useState('home');
   const [selectedCourse, setSelectedCourse] = useState(null);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
     const tg = window.Telegram?.WebApp;
@@ -14,6 +15,15 @@ export default function App() {
       tg.expand();
       tg.setHeaderColor('#000000');
       tg.setBackgroundColor('#000000');
+      
+      // ПРОВЕРКА НА АДМИНА
+      const currentUserId = tg.initDataUnsafe?.user?.id;
+      if (currentUserId === ADMIN_ID) {
+        setIsAdmin(true);
+      } else {
+        // Для тестов в браузере (если открываете без ТГ)
+        // setIsAdmin(true); // Раскомментируйте, чтобы посмотреть админку в браузере
+      }
     }
   }, []);
 
@@ -21,7 +31,7 @@ export default function App() {
     const tg = window.Telegram?.WebApp;
     if (!tg?.BackButton) return;
 
-    if (['catalog', 'course', 'checkout'].includes(screen)) {
+    if (['catalog', 'course', 'checkout', 'admin'].includes(screen)) {
       tg.BackButton.show();
       const handler = () => {
         if (screen === 'course') setScreen('catalog');
@@ -67,19 +77,17 @@ export default function App() {
         </div>
 
         <div className="relative z-10 flex-1 overflow-y-auto overscroll-contain px-5 pt-8 pb-28 [&::-webkit-scrollbar]:hidden">
-          {screen === 'home' && (
-            <HomeScreen 
-              user={mockUser} 
-              onCatalog={() => setScreen('catalog')} 
-              onCourse={(c) => { setSelectedCourse(c); setScreen('course'); }} 
-            />
-          )}
+          {screen === 'home' && <HomeScreen user={mockUser} onCatalog={() => setScreen('catalog')} onCourse={(c) => { setSelectedCourse(c); setScreen('course'); }} />}
           {screen === 'catalog' && <CatalogScreen onCourse={(c) => { setSelectedCourse(c); setScreen('course'); }} onBack={() => setScreen('home')} />}
           {screen === 'course' && selectedCourse && <CourseScreen course={selectedCourse} onBack={() => setScreen('catalog')} onBuy={(c) => { setSelectedCourse(c); setScreen('checkout'); }} />}
           {screen === 'checkout' && selectedCourse && <CheckoutScreen course={selectedCourse} user={mockUser} onPay={handleBuy} onBack={() => setScreen('course')} />}
-          {screen === 'profile' && <ProfileScreen user={mockUser} onSupport={() => {}} />}
+          
+          {screen === 'profile' && <ProfileScreen user={mockUser} onSupport={() => {}} onPlayCourse={(c) => alert(`Тут скоро будет видео-плеер для курса: ${c.title}`)} />}
+          
+          {screen === 'admin' && isAdmin && <AdminScreen onBack={() => setScreen('home')} />}
         </div>
 
+        {/* Плавающая кнопка Техподдержки */}
         {screen === 'profile' && (
           <div className="absolute bottom-[88px] right-6 z-30 animate-fade-up delay-400">
             <button
@@ -91,17 +99,25 @@ export default function App() {
           </div>
         )}
 
+        {/* Нижняя навигация */}
         <div className="absolute bottom-6 left-0 right-0 z-20 flex justify-center px-4 pointer-events-none">
-          <div className="flex items-center gap-2 p-2 bg-black/60 backdrop-blur-2xl border border-white/10 rounded-full pointer-events-auto">
-            <button onClick={() => setScreen('home')} className={`w-14 h-14 flex items-center justify-center rounded-full transition-all duration-150 ${screen === 'home' ? 'bg-white text-black' : 'text-gray-400 hover:text-white hover:bg-white/5'}`}>
+          <div className="flex items-center gap-1 p-2 bg-black/60 backdrop-blur-2xl border border-white/10 rounded-full pointer-events-auto">
+            <button onClick={() => setScreen('home')} className={`w-12 h-12 flex items-center justify-center rounded-full transition-all duration-150 ${screen === 'home' ? 'bg-white text-black' : 'text-gray-400 hover:text-white hover:bg-white/5'}`}>
               <HomeIcon className="w-5 h-5" />
             </button>
-            <button onClick={() => setScreen('catalog')} className={`w-14 h-14 flex items-center justify-center rounded-full transition-all duration-150 ${screen === 'catalog' ? 'bg-white text-black' : 'text-gray-400 hover:text-white hover:bg-white/5'}`}>
+            <button onClick={() => setScreen('catalog')} className={`w-12 h-12 flex items-center justify-center rounded-full transition-all duration-150 ${screen === 'catalog' ? 'bg-white text-black' : 'text-gray-400 hover:text-white hover:bg-white/5'}`}>
               <CartIcon className="w-5 h-5" />
             </button>
-            <button onClick={() => setScreen('profile')} className={`w-14 h-14 flex items-center justify-center rounded-full transition-all duration-150 ${screen === 'profile' ? 'bg-white text-black' : 'text-gray-400 hover:text-white hover:bg-white/5'}`}>
+            <button onClick={() => setScreen('profile')} className={`w-12 h-12 flex items-center justify-center rounded-full transition-all duration-150 ${screen === 'profile' ? 'bg-white text-black' : 'text-gray-400 hover:text-white hover:bg-white/5'}`}>
               <UserIcon className="w-5 h-5" />
             </button>
+            
+            {/* Кнопка Админа (появляется только если isAdmin) */}
+            {isAdmin && (
+              <button onClick={() => setScreen('admin')} className={`w-12 h-12 flex items-center justify-center rounded-full transition-all duration-150 ${screen === 'admin' ? 'bg-[#3390ec] text-white' : 'text-gray-400 hover:text-white hover:bg-white/5'}`}>
+                <AdminIcon className="w-5 h-5" />
+              </button>
+            )}
           </div>
         </div>
       </div>
